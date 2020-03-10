@@ -14,10 +14,9 @@ public class Board {
 	private int flagsLeft;
 
 	public Board(int height, int width, int percentage) {
-		CheckParameters.check(height, width);
 		
 		board = new Square[height][width];
-		setState(StateOfTheGame.PLAYING);
+		setStateOfTheGame(StateOfTheGame.PLAYING);
 		mines = (int) ((height * width) * percentage / 100);
 		flagsLeft = mines;
 		initBoard();
@@ -29,7 +28,7 @@ public class Board {
 	public Board(int mines, Square[][] squares) {
 
 		board = squares;
-		setState(StateOfTheGame.PLAYING);
+		setStateOfTheGame(StateOfTheGame.PLAYING);
 		this.mines = mines;
 		flagsLeft = mines;
 		
@@ -65,9 +64,6 @@ public class Board {
 
 	public boolean isExploded(int x, int y) {
 
-		CheckParameters.check(x);
-		CheckParameters.check(y);
-
 		if (board[x][y].hasMine() && board[x][y].isOpen()) {
 			return true;
 		}
@@ -86,8 +82,7 @@ public class Board {
 
 	public void flag(int x, int y) {
 
-		CheckParameters.check(x);
-		CheckParameters.check(y);
+		CheckParameters.check(x, y);
 
 		if (!board[x][y].hasFlag() && !board[x][y].isOpen()) {
 			board[x][y].flag();
@@ -103,10 +98,13 @@ public class Board {
 
 	public void unflag(int x, int y) {
 
-		CheckParameters.check(x);
-		CheckParameters.check(y);
+		CheckParameters.check(x, y);
 
-		if (board[x][y].hasFlag()) {
+		if (board[x][y].hasFlag() && board[x][y].hasMine()) {
+			board[x][y].unflag();
+			flagsLeft++;
+			mines++;
+		}else if(board[x][y].hasFlag()) {
 			board[x][y].unflag();
 			flagsLeft++;
 		}
@@ -130,7 +128,7 @@ public class Board {
 	}
 
 	public void markAsExploded() {
-		this.setState(StateOfTheGame.LOST);
+		this.setStateOfTheGame(StateOfTheGame.LOST);
 	}
 
 	public char[][] getStatus() {
@@ -165,33 +163,21 @@ public class Board {
 
 	}
 
-	// TO CHANGE !!!
-	public Square[][] getSquaresForTest() {
-
-		/*
-		 * for (int i = 0; i < board.length; i++) { for (int j = 0; j < board[0].length;
-		 * j++) {
-		 * 
-		 * System.out.print("[" + board[i][j].getSquareValue() + "]");
-		 * 
-		 * } System.out.println(); }
-		 */
-		
+	public Square[][] getSquaresForTest() {		
 		return this.board;
 	}
 
-	public StateOfTheGame getState() {
+	public StateOfTheGame getStateOfTheGame() {
 		return state;
 	}
 
-	public void setState(StateOfTheGame state) {
+	public void setStateOfTheGame(StateOfTheGame state) {
 		this.state = state;
 	}
 
 	private int calculateSquareValue(int x, int y) {
 
-		CheckParameters.check(y);
-		CheckParameters.check(x);
+		CheckParameters.check(x, y);
 		
 		if(board[x][y].hasMine()) {
 			return -1;

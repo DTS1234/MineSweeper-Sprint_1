@@ -14,17 +14,14 @@ public class Game {
 	private long startTime;
 
 	public Game(Board board) {
-
-		gameBoard = board;
-		//startTime = 0;
-		
+		gameBoard = board;		
 	}
 
 	public void play() {
 		
 		startTime = System.currentTimeMillis() * 1000;
 		
-		while (gameBoard.getState() == StateOfTheGame.PLAYING) {
+		while (gameBoard.getStateOfTheGame() == StateOfTheGame.PLAYING) {
 			System.out.println();
 			System.out.println("Time : " + (System.currentTimeMillis()*1000 - startTime)/1000000 + " seconds");
 			showFlagsLeftMessage();
@@ -51,7 +48,7 @@ public class Game {
 			System.out.println("YOU WON !");
 			gameBoard.unveil();
 			printBoard(gameBoard.getStatus());
-			gameBoard.setState(StateOfTheGame.WON);
+			gameBoard.setStateOfTheGame(StateOfTheGame.WON);
 			System.out.println("GAME OVER");
 		}
 	}
@@ -104,6 +101,7 @@ public class Game {
 	}
 
 	private int firstCoordinateSelection() {
+		
 		System.out.println("Pick first cordinate :");
 		char rowChar = readChar();
 		
@@ -115,19 +113,22 @@ public class Game {
 	}
 
 	private int secondCoordinateSelection() {
-		System.out.println("Pick second cordinate :");
 		
+		System.out.println("Pick second cordinate :");
 		char colChar = readChar();
+		
+		CheckParameters.check(colChar);		
 		Integer col = Integer.parseInt(colChar + "");
 		
 		return col;
-
 	}
 	
 	private char moveSelection() {
 		
 		System.out.println("movement (s|f|u) :");
 		char move = readChar();
+		
+		CheckParameters.checkMove(move);
 		
 		return move;
 	}

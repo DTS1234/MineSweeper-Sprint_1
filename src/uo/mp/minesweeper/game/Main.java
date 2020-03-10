@@ -12,7 +12,7 @@ public class Main {
 	}
 
 	private Main configure() {
-		Board board = new Board(9, 9, 3 /* % */);
+		Board board = new Board(9, 9, 12 /* % */);
 		game = new Game( board );
 		return this;
 	}
